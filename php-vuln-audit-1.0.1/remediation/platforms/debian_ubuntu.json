@@ -1,0 +1,68 @@
+{
+  "platform": "debian_ubuntu",
+  "applies_to_os": [
+    "debian",
+    "ubuntu"
+  ],
+  "steps": [
+    {
+      "id": "S1",
+      "title": "Sauvegarde des configurations et de l'état des paquets",
+      "purpose": "Permettre un retour arrière de configuration et documenter les versions avant intervention.",
+      "expected": "Archive /root/php-remediation-<horodatage>.tgz et liste des paquets créées.",
+      "commands": [
+        "BK=/root/php-remediation-{timestamp}",
+        "mkdir -p \"$BK\"",
+        "tar czf \"$BK/etc.tgz\" {backup_dirs}",
+        "dpkg-query -W -f='${{binary:Package}}\\t${{Version}}\\n' 'php*' 'libapache2-mod-php*' > \"$BK/packages-before.tsv\"",
+        "cp -a /var/cache/apt/archives/php*.deb \"$BK/\" 2>/dev/null || true"
+      ]
+    },
+    {
+      "id": "S2",
+      "title": "Rafraîchissement des index et contrôle de la version candidate",
+      "purpose": "Vérifier AVANT installation que le dépôt fournit une version corrigée confirmée.",
+      "expected": "Chaque contrôle affiche OK ; sinon arrêt du script.",
+      "commands": [
+        "apt-get update",
+        "apt-cache policy {binary_packages}"
+      ],
+      "append": "candidate_checks"
+    },
+    {
+      "id": "S3",
+      "title": "Mise à jour ciblée des paquets PHP installés",
+      "purpose": "Mettre à jour uniquement les paquets PHP déjà installés (pas de 'apt upgrade' global).",
+      "expected": "Les paquets passent à la version candidate vérifiée en S2.",
+      "commands": [
+        "apt-get install --only-upgrade -y {binary_packages}"
+      ]
+    },
+    {
+      "id": "S4",
+      "title": "Redémarrage complet des services",
+      "purpose": "Éliminer les processus exécutant l'ancien code (reload/graceful insuffisants pour mod_php).",
+      "expected": "Services 'active' après redémarrage.",
+      "commands_per_service": "systemctl restart {service} && systemctl is-active {service}",
+      "requires": "services"
+    },
+    {
+      "id": "S5",
+      "title": "Preuve de correction",
+      "purpose": "P1 version complète du paquet >= avis distribution ; P2 aucun processus sur l'ancien PHP ; changelog en simple complément.",
+      "expected": "Toutes les lignes check_ge en OK, aucun processus obsolète ; sinon arrêt en erreur.",
+      "commands": [
+        "if grep -lE '(php|libphp|apache2|lsphp).*\\(deleted\\)$' /proc/[0-9]*/maps 2>/dev/null; then echo \"KO : processus exécutant encore l'ancien PHP (liste ci-dessus)\"; exit 1; else echo 'OK : aucun processus obsolète'; fi",
+        "command -v needrestart >/dev/null && needrestart -b -r l || true",
+        "for d in /usr/share/doc/php*/changelog.Debian.gz; do printf 'info %s : ' \"$d\"; zgrep -cE 'CVE-2026-10961[89]' \"$d\" || true; done"
+      ],
+      "prepend": "candidate_post_checks"
+    }
+  ],
+  "rollback": [
+    "Le retour arrière réintroduit la vulnérabilité : uniquement serveur isolé (retrait du load balancer / filtrage entrant).",
+    "Configuration : tar xzf \"$BK/etc.tgz\" -C / puis redémarrage des services.",
+    "Paquets : dpkg -i \"$BK\"/php*.deb si les .deb précédents étaient en cache ; sinon apt-get install <paquet>=<version> si encore publiée (souvent supprimée de la poche sécurité).",
+    "Préférer la restauration d'un snapshot/sauvegarde machine pris avant S3."
+  ]
+}

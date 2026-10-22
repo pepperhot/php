@@ -1,0 +1,129 @@
+{
+ "schema_version": 1,
+ "collected_at": "2026-10-22T08:00:00+00:00",
+ "hostname": "web-trixie",
+ "euid": 0,
+ "os": {
+  "id": "debian",
+  "version_id": "13",
+  "codename": "trixie",
+  "pretty": "Debian GNU/Linux 13 (trixie)"
+ },
+ "packages": [
+  {
+   "name": "php8.4-fpm",
+   "version": "8.4.27-1+0~20261021.1+debian13~1.gbp+deb.sury.org+1",
+   "source": "php8.4",
+   "source_version": "8.4.27-1+0~20261021.1+debian13~1.gbp+deb.sury.org+1"
+  },
+  {
+   "name": "libapache2-mod-php8.4",
+   "version": "8.4.27-1+0~20261021.1+debian13~1.gbp+deb.sury.org+1",
+   "source": "php8.4",
+   "source_version": "8.4.27-1+0~20261021.1+debian13~1.gbp+deb.sury.org+1"
+  },
+  {
+   "name": "php7.4-fpm",
+   "version": "7.4.33-30+0~20251001+debian13~1.gbp+deb.sury.org+1",
+   "source": "php7.4",
+   "source_version": "7.4.33-30+0~20251001+debian13~1.gbp+deb.sury.org+1"
+  },
+  {
+   "name": "php8.5-fpm",
+   "version": "8.5.11-1+0~20261001+debian13~1.gbp+deb.sury.org+1",
+   "source": "php8.5",
+   "source_version": "8.5.11-1+0~20261001+debian13~1.gbp+deb.sury.org+1"
+  }
+ ],
+ "changelog_cves": {
+  "php8.4": [
+   "CVE-2026-109618",
+   "CVE-2026-109619"
+  ],
+  "php7.4": []
+ },
+ "binaries": [
+  {
+   "path": "/usr/local/bin/php",
+   "realpath": "/usr/local/bin/php",
+   "version": "8.4.26",
+   "sapi": "cli",
+   "owner_package": null
+  },
+  {
+   "path": "/opt/bitnami/php/sbin/php-fpm",
+   "realpath": "/opt/bitnami/php/sbin/php-fpm",
+   "version": "8.1.31",
+   "sapi": "fpm-fcgi",
+   "owner_package": null
+  }
+ ],
+ "ini": {
+  "8.5": {
+   "apache2": {
+    "values": {
+     "session.upload_progress.enabled": "Off",
+     "fatal_error_backtraces": "On",
+     "memory_limit": "-1",
+     "post_max_size": "8M"
+    },
+    "files": []
+   }
+  },
+  "8.4": {
+   "apache2": {
+    "values": {},
+    "files": []
+   }
+  }
+ },
+ "fpm_pools": {},
+ "apache": {
+  "present": true,
+  "php_modules_enabled": [
+   "php8.4"
+  ],
+  "mpm": "mpm_prefork",
+  "conf_php_overrides": 1,
+  "htaccess_php_overrides": 3,
+  "htaccess_scanned": 40,
+  "htaccess_truncated": false
+ },
+ "services": [
+  {
+   "unit": "apache2.service",
+   "load": "loaded",
+   "active": "active",
+   "sub": "running"
+  }
+ ],
+ "stale_processes": null,
+ "containers": {
+  "enabled": true,
+  "items": [
+   {
+    "id": "abc",
+    "image": "php:8.4.27-fpm",
+    "name": "app",
+    "php_version": "8.4.27"
+   },
+   {
+    "id": "def",
+    "image": "php:8.2-fpm",
+    "name": "legacy",
+    "php_version": "8.2.34"
+   }
+  ]
+ },
+ "http_probes": [
+  {
+   "url": "https://example.test/",
+   "status": 200,
+   "x_powered_by": "PHP/8.3.6",
+   "server": "nginx"
+  }
+ ],
+ "errors": [
+  "Ex\u00e9cution non-root : r\u00e9sultats partiels."
+ ]
+}

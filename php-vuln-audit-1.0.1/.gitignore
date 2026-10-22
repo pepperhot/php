@@ -1,0 +1,7 @@
+reports/*
+!reports/.gitkeep
+data/inventory/*
+!data/inventory/.gitkeep
+__pycache__/
+*.pyc
+.ruff_cache/

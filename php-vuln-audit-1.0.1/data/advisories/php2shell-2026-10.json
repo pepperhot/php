@@ -1,0 +1,385 @@
+{
+  "schema_version": 1,
+  "id": "PHP2SHELL-2026-10",
+  "title": "PHP2Shell - RCE non authentifiée dans le moteur PHP",
+  "published": "2026-10-21",
+  "verified_on": "2026-10-22",
+  "cves": [
+    {
+      "id": "CVE-2026-109618",
+      "ghsa": "GHSA-w8hw-w9fx-j79w",
+      "summary": "RCE via corruption mémoire lors d'un out-of-memory : longjmp() interrompt PHP alors que des données de requête sont partiellement initialisées ; le nettoyage de requête les traite ensuite comme valides.",
+      "cvss_v4": {
+        "score": 9.2,
+        "vector": "CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N"
+      },
+      "cwe": [
+        "CWE-416",
+        "CWE-755",
+        "CWE-824",
+        "CWE-1325",
+        "CWE-1419"
+      ],
+      "sapi_exposure": {
+        "apache2handler": "confirmé exploitable (RCE validée sur mod_php, prefork)",
+        "fpm-fcgi": "susceptible selon analyse du code, exploit complet non démontré",
+        "frankenphp": "probablement susceptible (analyse du code)",
+        "litespeed": "probablement susceptible, non validé",
+        "cli": "non mentionné par l'avis"
+      }
+    },
+    {
+      "id": "CVE-2026-109619",
+      "ghsa": "GHSA-6wmf-4rv5-p3rp",
+      "summary": "RCE via état global périmé : un état appartenant à une requête survit à la libération de sa mémoire et peut être réutilisé par une requête ultérieure sur le même worker.",
+      "cvss_v4": {
+        "score": 9.2,
+        "vector": "CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N"
+      },
+      "cwe": [
+        "CWE-416",
+        "CWE-755",
+        "CWE-824",
+        "CWE-1325",
+        "CWE-1419"
+      ],
+      "sapi_exposure": {
+        "apache2handler": "confirmé (chemin fatal_error_backtraces PHP 8.5 et chemin session upload progress)",
+        "fpm-fcgi": "chemin session upload progress validé",
+        "cli": "non mentionné par l'avis"
+      }
+    }
+  ],
+  "upstream": {
+    "branches": {
+      "8.2": {
+        "fixed": "8.2.35",
+        "security_support_until": "2026-12-31"
+      },
+      "8.3": {
+        "fixed": "8.3.36",
+        "security_support_until": "2027-12-31"
+      },
+      "8.4": {
+        "fixed": "8.4.27",
+        "security_support_until": "2028-12-31"
+      },
+      "8.5": {
+        "fixed": "8.5.12",
+        "security_support_until": "2029-12-31"
+      }
+    },
+    "min_supported_branch": "8.2",
+    "eol_note": "Branches < 8.2 : aucun correctif publié par le projet PHP. Backports source minimaux fournis pour 7.4, 8.0 et 8.1.",
+    "source_backports": {
+      "7.4": "https://github.com/php/php-src/tree/PHP-7.4-CVE-2026-109618-109619",
+      "8.0": "https://github.com/php/php-src/tree/PHP-8.0-CVE-2026-109618-109619",
+      "8.1": "https://github.com/php/php-src/tree/PHP-8.1-CVE-2026-109618-109619"
+    }
+  },
+  "distro_fixes": [
+    {
+      "distro": "debian",
+      "release": "trixie",
+      "source_package": "php8.4",
+      "fixed_version": "8.4.27-1~deb13u1",
+      "advisory": "DSA-6574-1",
+      "cves": [
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ],
+      "source_url": "https://security-tracker.debian.org/tracker/CVE-2026-109619",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "distro": "debian",
+      "release": "bookworm",
+      "source_package": "php8.2",
+      "fixed_version": "8.2.35-1~deb12u1",
+      "advisory": "DLA-4848-1",
+      "cves": [
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ],
+      "source_url": "https://security-tracker.debian.org/tracker/DLA-4848-1",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "distro": "ubuntu",
+      "release": "26.10",
+      "source_package": "php8.5",
+      "fixed_version": "8.5.9-0ubuntu2.1",
+      "advisory": "USN-8948-1",
+      "cves": [
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ],
+      "source_url": "https://lists.ubuntu.com/archives/ubuntu-security-announce/2026-October/011433.html",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "distro": "ubuntu",
+      "release": "26.04",
+      "source_package": "php8.5",
+      "fixed_version": "8.5.4-0ubuntu1.5",
+      "advisory": "USN-8948-1",
+      "cves": [
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ],
+      "source_url": "https://lists.ubuntu.com/archives/ubuntu-security-announce/2026-October/011433.html",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "distro": "ubuntu",
+      "release": "24.04",
+      "source_package": "php8.3",
+      "fixed_version": "8.3.6-0ubuntu0.24.04.13",
+      "advisory": "USN-8948-1",
+      "cves": [
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ],
+      "source_url": "https://lists.ubuntu.com/archives/ubuntu-security-announce/2026-October/011433.html",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "distro": "ubuntu",
+      "release": "22.04",
+      "source_package": "php8.1",
+      "fixed_version": "8.1.2-1ubuntu2.28",
+      "advisory": "USN-8948-1",
+      "cves": [
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ],
+      "source_url": "https://lists.ubuntu.com/archives/ubuntu-security-announce/2026-October/011433.html",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "distro": "ubuntu",
+      "release": "20.04",
+      "source_package": "php7.4",
+      "fixed_version": "7.4.3-4ubuntu2.29+esm5",
+      "advisory": "USN-8948-2",
+      "cves": [
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ],
+      "source_url": "https://ubuntu.com/security/notices/USN-8948-2",
+      "verified_on": "2026-10-22",
+      "note": "Ubuntu Pro (ESM) requis."
+    },
+    {
+      "distro": "ubuntu",
+      "release": "18.04",
+      "source_package": "php7.2",
+      "fixed_version": "7.2.24-0ubuntu0.18.04.17+esm14",
+      "advisory": "USN-8948-2",
+      "cves": [
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ],
+      "source_url": "https://ubuntu.com/security/notices/USN-8948-2",
+      "verified_on": "2026-10-22",
+      "note": "Ubuntu Pro (ESM) requis."
+    },
+    {
+      "distro": "ubuntu",
+      "release": "16.04",
+      "source_package": "php7.0",
+      "fixed_version": "7.0.33-0ubuntu0.16.04.16+esm22",
+      "advisory": "USN-8948-2",
+      "cves": [
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ],
+      "source_url": "https://ubuntu.com/security/notices/USN-8948-2",
+      "verified_on": "2026-10-22",
+      "note": "Legacy Support add-on requis."
+    },
+    {
+      "distro": "ubuntu",
+      "release": "14.04",
+      "source_package": "php5",
+      "fixed_version": "5.5.9+dfsg-1ubuntu4.29+esm18",
+      "advisory": "USN-8948-2",
+      "cves": [
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ],
+      "source_url": "https://ubuntu.com/security/notices/USN-8948-2",
+      "verified_on": "2026-10-22",
+      "note": "Legacy Support add-on requis."
+    }
+  ],
+  "third_party_repos": {
+    "sury": {
+      "match": "deb.sury.org",
+      "policy": "upstream_version",
+      "eol_backports": "Backports annoncés pour 5.6 à 8.1 ; chaînes de version exactes non publiées dans les sources consultées : à confirmer via le changelog du paquet.",
+      "source_url": "https://www.linuxcompatible.org/story/php2shell-patch-suryorg-ships-debian-ubuntu-updates-for-every-php-version-from-56-to-85/",
+      "verified_on": "2026-10-22"
+    }
+  },
+  "mitigations": [
+    {
+      "id": "MIT-UPLOAD-PROGRESS",
+      "directive": "session.upload_progress.enabled",
+      "recommended": "0",
+      "default": "1",
+      "cves": [
+        "CVE-2026-109619"
+      ],
+      "branches": "*",
+      "scope": "Bloque les chemins de session confirmés uniquement. Doit être posé dans php.ini, le pool FPM (php_admin_flag) ou la configuration serveur ; ini_set() et .user.ini sont inefficaces. Redémarrer tous les workers."
+    },
+    {
+      "id": "MIT-FATAL-BACKTRACES",
+      "directive": "fatal_error_backtraces",
+      "recommended": "0",
+      "default": "1",
+      "cves": [
+        "CVE-2026-109619"
+      ],
+      "branches": "8.5",
+      "scope": "PHP 8.5 uniquement. Bloque le seul chemin fatal backtrace confirmé."
+    },
+    {
+      "id": "MIT-MEMORY-LIMIT",
+      "directive": "memory_limit",
+      "recommended": "-1",
+      "default": "128M",
+      "cves": [
+        "CVE-2026-109618"
+      ],
+      "branches": "*",
+      "scope": "Supprime le déclenchement OOM interne. Effet de bord : risque d'épuisement mémoire de l'hôte ; à combiner avec une limite cgroup qui tue uniquement le worker. Ne pas utiliser RLIMIT_AS / RLIMIT_DATA."
+    },
+    {
+      "id": "MIT-POST-MAX-SIZE",
+      "directive": "post_max_size",
+      "recommended_max_bytes": 33554432,
+      "default": "8M",
+      "cves": [
+        "CVE-2026-109618"
+      ],
+      "branches": "*",
+      "scope": "8M sans upload, 32M avec upload ; upload_max_filesize < post_max_size. Insuffisant seul : les requêtes sans Content-Length exploitable contournent la vérification initiale."
+    }
+  ],
+  "sources": [
+    {
+      "id": "php-advisory",
+      "publisher": "PHP Group",
+      "type": "primary",
+      "title": "Security advisory: Critical remote code execution vulnerabilities, update now",
+      "url": "https://www.php.net/archive/2026.php#2026-10-21-5",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "ghsa-618",
+      "publisher": "PHP Group (GitHub)",
+      "type": "primary",
+      "title": "GHSA-w8hw-w9fx-j79w - RCE via OOM corruption",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "ghsa-619",
+      "publisher": "PHP Group (GitHub)",
+      "type": "primary",
+      "title": "GHSA-6wmf-4rv5-p3rp - RCE via stale global state",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "certfr-ale",
+      "publisher": "CERT-FR",
+      "type": "primary",
+      "title": "CERTFR-2026-ALE-014",
+      "url": "https://cert.cyber.gouv.fr/alerte/CERTFR-2026-ALE-014/",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "certfr-avi",
+      "publisher": "CERT-FR",
+      "type": "primary",
+      "title": "CERTFR-2026-AVI-1359",
+      "url": "https://cert.cyber.gouv.fr/avis/CERTFR-2026-AVI-1359/",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "certeu",
+      "publisher": "CERT-EU",
+      "type": "primary",
+      "title": "Security Advisory 2026-018",
+      "url": "https://cert.europa.eu/publications/security-advisories/2026-018/",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "ncsc-nl",
+      "publisher": "NCSC-NL",
+      "type": "primary",
+      "title": "NCSC-NL/php2shell",
+      "url": "https://github.com/NCSC-NL/php2shell",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "debian-618",
+      "publisher": "Debian",
+      "type": "primary",
+      "title": "Security tracker CVE-2026-109618",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-109618",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "debian-619",
+      "publisher": "Debian",
+      "type": "primary",
+      "title": "Security tracker CVE-2026-109619",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-109619",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "usn-8948-1",
+      "publisher": "Canonical",
+      "type": "primary",
+      "title": "USN-8948-1",
+      "url": "https://lists.ubuntu.com/archives/ubuntu-security-announce/2026-October/011433.html",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "usn-8948-2",
+      "publisher": "Canonical",
+      "type": "primary",
+      "title": "USN-8948-2",
+      "url": "https://ubuntu.com/security/notices/USN-8948-2",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "aws-bulletin",
+      "publisher": "AWS",
+      "type": "primary",
+      "title": "AWS Security Bulletin 2026-143-AWS",
+      "url": "https://aws.amazon.com/security/security-bulletins/2026-143-aws/",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "alas-618",
+      "publisher": "AWS",
+      "type": "primary",
+      "title": "Amazon Linux Security Center CVE-2026-109618",
+      "url": "https://explore.alas.aws.amazon.com/CVE-2026-109618.html",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "dla-4848-1",
+      "publisher": "Debian LTS",
+      "type": "primary",
+      "title": "DLA-4848-1 php8.2 security update (CVE-2026-109618, CVE-2026-109619)",
+      "url": "https://security-tracker.debian.org/tracker/DLA-4848-1",
+      "verified_on": "2026-10-22"
+    }
+  ]
+}

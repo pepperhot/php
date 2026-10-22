@@ -1,0 +1,29 @@
+{
+  "Name": "Body-over-8KB-test",
+  "Priority": 1,
+  "Action": {
+    "Count": {}
+  },
+  "VisibilityConfig": {
+    "SampledRequestsEnabled": true,
+    "CloudWatchMetricsEnabled": true,
+    "MetricName": "Body-over-8KB-test"
+  },
+  "Statement": {
+    "SizeConstraintStatement": {
+      "FieldToMatch": {
+        "Body": {
+          "OversizeHandling": "MATCH"
+        }
+      },
+      "ComparisonOperator": "GT",
+      "Size": 8192,
+      "TextTransformations": [
+        {
+          "Priority": 0,
+          "Type": "NONE"
+        }
+      ]
+    }
+  }
+}

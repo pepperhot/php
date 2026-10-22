@@ -1,0 +1,374 @@
+{
+  "meta": {
+    "tool_version": "1.0.1",
+    "generated_at": "2026-10-22T08:27:04+00:00",
+    "mode": "audit",
+    "environment": "production",
+    "host": "web-noble",
+    "os": {
+      "id": "ubuntu",
+      "version_id": "24.04",
+      "codename": "noble",
+      "pretty": "Ubuntu 24.04.5 LTS"
+    },
+    "inventory_collected_at": "2026-10-22T08:00:00+00:00",
+    "advisories": [
+      {
+        "id": "PHP2SHELL-2026-10",
+        "verified_on": "2026-10-22"
+      }
+    ],
+    "rules_verified_on": "2026-10-22"
+  },
+  "summary": {
+    "overall": "VULNERABLE",
+    "by_status": {
+      "VULNERABLE": 2,
+      "WARN": 2,
+      "INFO": 6
+    },
+    "failed_checks": []
+  },
+  "findings": [
+    {
+      "check": "PKG",
+      "id": "PKG-php8.3",
+      "title": "php8.3 vulnérable",
+      "status": "VULNERABLE",
+      "severity": "critical",
+      "component": "php8.3",
+      "detail": "8.3.6-0ubuntu0.24.04.12 < 8.3.6-0ubuntu0.24.04.13 (USN-8948-1).",
+      "recommendation": "Installer 8.3.6-0ubuntu0.24.04.13 ou supérieur depuis le dépôt sécurité ubuntu, puis redémarrer les services PHP.",
+      "cves": [
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ],
+      "evidence": {
+        "source_package": "php8.3",
+        "version": "8.3.6-0ubuntu0.24.04.12",
+        "origin": "ubuntu",
+        "binaries": [
+          "php8.3-cli",
+          "php8.3-common",
+          "php8.3-fpm"
+        ],
+        "changelog_cves": [],
+        "os": "ubuntu 24.04 noble",
+        "fixed_version": "8.3.6-0ubuntu0.24.04.13",
+        "distro_advisory": "USN-8948-1",
+        "basis": "table distribution"
+      },
+      "references": [
+        "https://lists.ubuntu.com/archives/ubuntu-security-announce/2026-October/011433.html"
+      ]
+    },
+    {
+      "check": "RUN",
+      "id": "RUN-STALE",
+      "title": "1 processus exécutent encore une bibliothèque/binaire PHP supprimé",
+      "status": "VULNERABLE",
+      "severity": "critical",
+      "component": "processus",
+      "detail": "Le paquet a été mis à jour mais l'ancien code reste chargé en mémoire.",
+      "recommendation": "Redémarrage complet (stop/start) des services PHP-FPM / Apache concernés ; 'reload' et 'graceful' ne suffisent pas pour mod_php.",
+      "cves": [
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ],
+      "evidence": {
+        "matches": [
+          {
+            "pid": 4242,
+            "comm": "php-fpm8.3",
+            "paths": [
+              "/usr/sbin/php-fpm8.3 (deleted)"
+            ]
+          }
+        ]
+      },
+      "references": []
+    },
+    {
+      "check": "MIT",
+      "id": "MIT-8.3-fpm:www-MIT-POST-MAX-SIZE",
+      "title": "PHP 8.3 fpm:www : post_max_size = 64M",
+      "status": "WARN",
+      "severity": "medium",
+      "component": "fpm:www",
+      "detail": "Mitigation absente sur une branche non confirmée corrigée. 8M sans upload, 32M avec upload ; upload_max_filesize < post_max_size. Insuffisant seul : les requêtes sans Content-Length exploitable contournent la vérification initiale.",
+      "recommendation": "Mitigation temporaire uniquement, ne remplace pas la mise à jour. Tester en préproduction.",
+      "cves": [
+        "CVE-2026-109618"
+      ],
+      "evidence": {
+        "branch": "8.3",
+        "context": "fpm:www",
+        "directive": "post_max_size",
+        "value": "64M",
+        "set_by": "php.ini",
+        "package_status": "VULNERABLE"
+      },
+      "references": [
+        "https://www.php.net/archive/2026.php#2026-10-21-5",
+        "https://cert.cyber.gouv.fr/alerte/CERTFR-2026-ALE-014/"
+      ]
+    },
+    {
+      "check": "MIT",
+      "id": "MIT-8.3-fpm:www-MIT-MEMORY-LIMIT",
+      "title": "PHP 8.3 fpm:www : memory_limit = -1",
+      "status": "WARN",
+      "severity": "low",
+      "component": "fpm:www",
+      "detail": "Supprime le déclenchement OOM interne. Effet de bord : risque d'épuisement mémoire de l'hôte ; à combiner avec une limite cgroup qui tue uniquement le worker. Ne pas utiliser RLIMIT_AS / RLIMIT_DATA.",
+      "recommendation": "Valeur posée par php_value (modifiable par l'application) : utiliser php_admin_value/php_admin_flag.",
+      "cves": [
+        "CVE-2026-109618"
+      ],
+      "evidence": {
+        "branch": "8.3",
+        "context": "fpm:www",
+        "directive": "memory_limit",
+        "value": "-1",
+        "set_by": "php_value (surchargeable)",
+        "package_status": "VULNERABLE"
+      },
+      "references": []
+    },
+    {
+      "check": "BIN",
+      "id": "BIN-/usr/bin/php8.3",
+      "title": "/usr/bin/php8.3 : PHP 8.3.6 (cli)",
+      "status": "INFO",
+      "severity": "info",
+      "component": "/usr/bin/php8.3",
+      "detail": "Binaire fourni par le paquet php8.3-cli : statut évalué par le contrôle PKG (les backports conservent le numéro upstream).",
+      "recommendation": "",
+      "cves": [],
+      "evidence": {
+        "path": "/usr/bin/php8.3",
+        "realpath": "/usr/bin/php8.3",
+        "version": "8.3.6",
+        "sapi": "cli",
+        "owner_package": "php8.3-cli",
+        "exposure": "cli"
+      },
+      "references": []
+    },
+    {
+      "check": "BIN",
+      "id": "BIN-/usr/sbin/php-fpm8.3",
+      "title": "/usr/sbin/php-fpm8.3 : PHP 8.3.6 (fpm-fcgi)",
+      "status": "INFO",
+      "severity": "info",
+      "component": "/usr/sbin/php-fpm8.3",
+      "detail": "Binaire fourni par le paquet php8.3-fpm : statut évalué par le contrôle PKG (les backports conservent le numéro upstream).",
+      "recommendation": "",
+      "cves": [],
+      "evidence": {
+        "path": "/usr/sbin/php-fpm8.3",
+        "realpath": "/usr/sbin/php-fpm8.3",
+        "version": "8.3.6",
+        "sapi": "fpm-fcgi",
+        "owner_package": "php8.3-fpm",
+        "exposure": "web"
+      },
+      "references": []
+    },
+    {
+      "check": "LOG",
+      "id": "LOG-OFF",
+      "title": "Détection désactivée",
+      "status": "INFO",
+      "severity": "info",
+      "component": "journaux",
+      "detail": "",
+      "recommendation": "",
+      "cves": [],
+      "evidence": {},
+      "references": []
+    },
+    {
+      "check": "MIT",
+      "id": "MIT-8.3-fpm:www-MAXREQ",
+      "title": "PHP 8.3 fpm:www : pm.max_requests = 500",
+      "status": "INFO",
+      "severity": "info",
+      "component": "fpm:www",
+      "detail": "pm.max_requests=1 supprime la réutilisation de worker (CVE-2026-109619) au prix des performances.",
+      "recommendation": "",
+      "cves": [],
+      "evidence": {
+        "user": "www-data",
+        "listen": "/run/php/php8.3-fpm.sock"
+      },
+      "references": []
+    },
+    {
+      "check": "MIT",
+      "id": "MIT-8.3-fpm:www-MIT-UPLOAD-PROGRESS",
+      "title": "PHP 8.3 fpm:www : session.upload_progress.enabled = 0",
+      "status": "INFO",
+      "severity": "info",
+      "component": "fpm:www",
+      "detail": "Bloque les chemins de session confirmés uniquement. Doit être posé dans php.ini, le pool FPM (php_admin_flag) ou la configuration serveur ; ini_set() et .user.ini sont inefficaces. Redémarrer tous les workers.",
+      "recommendation": "",
+      "cves": [
+        "CVE-2026-109619"
+      ],
+      "evidence": {
+        "branch": "8.3",
+        "context": "fpm:www",
+        "directive": "session.upload_progress.enabled",
+        "value": "0",
+        "set_by": "php_admin",
+        "package_status": "VULNERABLE"
+      },
+      "references": []
+    },
+    {
+      "check": "RUN",
+      "id": "RUN-SERVICES",
+      "title": "Services web/PHP actifs",
+      "status": "INFO",
+      "severity": "info",
+      "component": "systemd",
+      "detail": "",
+      "recommendation": "",
+      "cves": [],
+      "evidence": {
+        "services": [
+          {
+            "unit": "php8.3-fpm.service",
+            "load": "loaded",
+            "active": "active",
+            "sub": "running"
+          },
+          {
+            "unit": "nginx.service",
+            "load": "loaded",
+            "active": "active",
+            "sub": "running"
+          }
+        ]
+      },
+      "references": []
+    }
+  ],
+  "data_gaps": [],
+  "sources": [
+    {
+      "id": "php-advisory",
+      "publisher": "PHP Group",
+      "type": "primary",
+      "title": "Security advisory: Critical remote code execution vulnerabilities, update now",
+      "url": "https://www.php.net/archive/2026.php#2026-10-21-5",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "ghsa-618",
+      "publisher": "PHP Group (GitHub)",
+      "type": "primary",
+      "title": "GHSA-w8hw-w9fx-j79w - RCE via OOM corruption",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "ghsa-619",
+      "publisher": "PHP Group (GitHub)",
+      "type": "primary",
+      "title": "GHSA-6wmf-4rv5-p3rp - RCE via stale global state",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "certfr-ale",
+      "publisher": "CERT-FR",
+      "type": "primary",
+      "title": "CERTFR-2026-ALE-014",
+      "url": "https://cert.cyber.gouv.fr/alerte/CERTFR-2026-ALE-014/",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "certfr-avi",
+      "publisher": "CERT-FR",
+      "type": "primary",
+      "title": "CERTFR-2026-AVI-1359",
+      "url": "https://cert.cyber.gouv.fr/avis/CERTFR-2026-AVI-1359/",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "certeu",
+      "publisher": "CERT-EU",
+      "type": "primary",
+      "title": "Security Advisory 2026-018",
+      "url": "https://cert.europa.eu/publications/security-advisories/2026-018/",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "ncsc-nl",
+      "publisher": "NCSC-NL",
+      "type": "primary",
+      "title": "NCSC-NL/php2shell",
+      "url": "https://github.com/NCSC-NL/php2shell",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "debian-618",
+      "publisher": "Debian",
+      "type": "primary",
+      "title": "Security tracker CVE-2026-109618",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-109618",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "debian-619",
+      "publisher": "Debian",
+      "type": "primary",
+      "title": "Security tracker CVE-2026-109619",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-109619",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "usn-8948-1",
+      "publisher": "Canonical",
+      "type": "primary",
+      "title": "USN-8948-1",
+      "url": "https://lists.ubuntu.com/archives/ubuntu-security-announce/2026-October/011433.html",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "usn-8948-2",
+      "publisher": "Canonical",
+      "type": "primary",
+      "title": "USN-8948-2",
+      "url": "https://ubuntu.com/security/notices/USN-8948-2",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "aws-bulletin",
+      "publisher": "AWS",
+      "type": "primary",
+      "title": "AWS Security Bulletin 2026-143-AWS",
+      "url": "https://aws.amazon.com/security/security-bulletins/2026-143-aws/",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "alas-618",
+      "publisher": "AWS",
+      "type": "primary",
+      "title": "Amazon Linux Security Center CVE-2026-109618",
+      "url": "https://explore.alas.aws.amazon.com/CVE-2026-109618.html",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "dla-4848-1",
+      "publisher": "Debian LTS",
+      "type": "primary",
+      "title": "DLA-4848-1 php8.2 security update (CVE-2026-109618, CVE-2026-109619)",
+      "url": "https://security-tracker.debian.org/tracker/DLA-4848-1",
+      "verified_on": "2026-10-22"
+    }
+  ],
+  "disclaimer": "Collecte sans modification de la configuration système (seuls les rapports et l'inventaire sont écrits). Une mitigation ne remplace pas le correctif. Une version corrigée ne nettoie pas un serveur déjà compromis."
+}

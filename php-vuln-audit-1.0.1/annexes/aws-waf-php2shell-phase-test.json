@@ -1,0 +1,90 @@
+{
+  "Name": "PHP2Shell-test",
+  "Priority": 0,
+  "Action": {
+    "Count": {}
+  },
+  "VisibilityConfig": {
+    "SampledRequestsEnabled": true,
+    "CloudWatchMetricsEnabled": true,
+    "MetricName": "PHP2Shell-test"
+  },
+  "Statement": {
+    "AndStatement": {
+      "Statements": [
+        {
+          "ByteMatchStatement": {
+            "FieldToMatch": {
+              "Method": {}
+            },
+            "PositionalConstraint": "EXACTLY",
+            "SearchString": "POST",
+            "TextTransformations": [
+              {
+                "Priority": 0,
+                "Type": "NONE"
+              }
+            ]
+          }
+        },
+        {
+          "OrStatement": {
+            "Statements": [
+              {
+                "ByteMatchStatement": {
+                  "FieldToMatch": {
+                    "SingleHeader": {
+                      "Name": "cookie"
+                    }
+                  },
+                  "PositionalConstraint": "CONTAINS",
+                  "SearchString": "PHPSESSID=",
+                  "TextTransformations": [
+                    {
+                      "Priority": 0,
+                      "Type": "NONE"
+                    }
+                  ]
+                }
+              },
+              {
+                "ByteMatchStatement": {
+                  "FieldToMatch": {
+                    "Body": {
+                      "OversizeHandling": "CONTINUE"
+                    }
+                  },
+                  "PositionalConstraint": "CONTAINS",
+                  "SearchString": "PHPSESSID",
+                  "TextTransformations": [
+                    {
+                      "Priority": 0,
+                      "Type": "NONE"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "ByteMatchStatement": {
+            "FieldToMatch": {
+              "Body": {
+                "OversizeHandling": "CONTINUE"
+              }
+            },
+            "PositionalConstraint": "CONTAINS",
+            "SearchString": "PHP_SESSION_UPLOAD_PROGRESS",
+            "TextTransformations": [
+              {
+                "Priority": 0,
+                "Type": "NONE"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

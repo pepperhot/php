@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "mode": "audit",
+  "environment": "production",
+  "advisories": ["data/advisories/php2shell-2026-10.json"],
+  "detection_rules": "config/detection_rules.json",
+  "reports_dir": "reports",
+  "log_level": "INFO",
+  "collect": {
+    "command_timeout_seconds": 15,
+    "php_binary_globs": [
+      "/usr/bin/php[0-9]*",
+      "/usr/sbin/php-fpm*",
+      "/usr/local/bin/php",
+      "/usr/local/sbin/php-fpm",
+      "/opt/*/php/bin/php",
+      "/opt/*/php/sbin/php-fpm"
+    ],
+    "php_conf_root": "/etc/php",
+    "apache_conf_root": "/etc/apache2",
+    "web_roots": ["/var/www"],
+    "max_htaccess_files": 5000,
+    "scan_proc_maps": true,
+    "systemd_units": ["php*-fpm*", "apache2*", "nginx*", "lsws*"],
+    "containers": {"enabled": false, "exec_version_probe": false},
+    "http_probes": []
+  },
+  "detection": {
+    "enabled": true,
+    "max_file_age_days": 14,
+    "max_lines_per_file": 2000000,
+    "max_samples_per_rule": 5,
+    "min_hits_to_flag": {"low": 50, "medium": 5, "high": 1},
+    "log_sources": [
+      {"name": "apache-access", "type": "access", "paths": ["/var/log/apache2/*access*.log*"]},
+      {"name": "apache-error", "type": "error", "paths": ["/var/log/apache2/*error*.log*"]},
+      {"name": "nginx-access", "type": "access", "paths": ["/var/log/nginx/*access*.log*"]},
+      {"name": "nginx-error", "type": "error", "paths": ["/var/log/nginx/*error*.log*"]},
+      {"name": "php-fpm", "type": "fpm", "paths": ["/var/log/php*-fpm.log*"]},
+      {"name": "syslog", "type": "system", "paths": ["/var/log/syslog*", "/var/log/kern.log*"]}
+    ]
+  },
+  "environments": {
+    "production": {"allow_remediation_script": true, "notes": "Aucune action automatique. Script de remédiation généré pour relecture uniquement."},
+    "preproduction": {"allow_remediation_script": true, "notes": "Valider le plan ici avant la production."},
+    "lab": {"allow_remediation_script": true, "notes": "Environnement de test isolé."}
+  }
+}

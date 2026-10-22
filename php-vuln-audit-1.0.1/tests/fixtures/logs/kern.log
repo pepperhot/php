@@ -1,0 +1,2 @@
+Oct 21 22:01:02 web kernel: [123.456] php-fpm8.3[4242]: segfault at 7f00 ip 000055 sp 00007ff error 4 in php-fpm8.3[55+1000]
+Oct 21 22:01:02 web kernel: [123.457] bash[1]: segfault at 0 ip 0 sp 0 error 4

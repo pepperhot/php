@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-10-22",
+  "rules": [
+    {
+      "id": "DR-001",
+      "title": "POST terminé en HTTP 500",
+      "applies_to": ["access"],
+      "pattern": "\"POST [^\"]*\" 500 ",
+      "severity": "medium",
+      "cves": ["CVE-2026-109618", "CVE-2026-109619"],
+      "rationale": "Un OOM ou une erreur fatale pendant le parsing multipart produit typiquement une 500 sur un POST.",
+      "false_positives": "Toute erreur applicative sur POST. Corréler avec DR-003/DR-005."
+    },
+    {
+      "id": "DR-002",
+      "title": "POST multipart (nécessite un LogFormat incluant Content-Type)",
+      "applies_to": ["access", "waf"],
+      "pattern": "multipart/form-data",
+      "severity": "low",
+      "cves": ["CVE-2026-109618", "CVE-2026-109619"],
+      "rationale": "Vecteur commun aux deux CVE. Absent des formats combined par défaut.",
+      "false_positives": "Formulaires et uploads légitimes. Pertinent uniquement sur des endpoints qui n'acceptent pas d'upload."
+    },
+    {
+      "id": "DR-003",
+      "title": "Épuisement memory_limit PHP",
+      "applies_to": ["error", "fpm", "system"],
+      "pattern": "Allowed memory size of [0-9]+ bytes exhausted",
+      "severity": "medium",
+      "cves": ["CVE-2026-109618"],
+      "rationale": "Le chemin OOM (longjmp) est le déclencheur de CVE-2026-109618.",
+      "false_positives": "Scripts gourmands légitimes (imports, exports)."
+    },
+    {
+      "id": "DR-004",
+      "title": "Out of memory PHP",
+      "applies_to": ["error", "fpm", "system"],
+      "pattern": "Out of memory \\(allocated [0-9]+\\)",
+      "severity": "medium",
+      "cves": ["CVE-2026-109618"],
+      "rationale": "Échec d'allocation hors memory_limit.",
+      "false_positives": "Pression mémoire réelle sur l'hôte."
+    },
+    {
+      "id": "DR-005",
+      "title": "Worker PHP-FPM terminé par signal",
+      "applies_to": ["fpm", "error", "system"],
+      "pattern": "child [0-9]+ exited on signal (6|7|11)",
+      "severity": "high",
+      "cves": ["CVE-2026-109618", "CVE-2026-109619"],
+      "rationale": "SIGABRT/SIGBUS/SIGSEGV : symptôme compatible avec une corruption mémoire.",
+      "false_positives": "Bug d'extension tierce, OPcache corrompu, matériel."
+    },
+    {
+      "id": "DR-006",
+      "title": "Enfant Apache terminé par signal",
+      "applies_to": ["error", "system"],
+      "pattern": "AH00052: child pid [0-9]+ exit signal (Segmentation fault|Aborted|Bus error)",
+      "severity": "high",
+      "cves": ["CVE-2026-109618", "CVE-2026-109619"],
+      "rationale": "mod_php est le SAPI le plus exposé selon l'avis PHP.",
+      "false_positives": "Crash de module Apache non lié."
+    },
+    {
+      "id": "DR-007",
+      "title": "Segfault noyau d'un processus PHP/Apache",
+      "applies_to": ["system"],
+      "pattern": "(php[0-9.]*|php-fpm[0-9.]*|apache2|httpd)\\[[0-9]+\\]: segfault at",
+      "severity": "high",
+      "cves": ["CVE-2026-109618", "CVE-2026-109619"],
+      "rationale": "Trace noyau d'un accès mémoire invalide.",
+      "false_positives": "Idem DR-005."
+    },
+    {
+      "id": "DR-008",
+      "title": "Dépassement du temps d'exécution",
+      "applies_to": ["error", "fpm"],
+      "pattern": "Maximum execution time of [0-9]+ seconds? exceeded",
+      "severity": "low",
+      "cves": ["CVE-2026-109619"],
+      "rationale": "L'avis PHP classe ce fatal parmi les producteurs d'état périmé.",
+      "false_positives": "Lenteurs applicatives."
+    },
+    {
+      "id": "DR-009",
+      "title": "Champ PHP_SESSION_UPLOAD_PROGRESS observé",
+      "applies_to": ["waf", "access", "error"],
+      "pattern": "PHP_SESSION_UPLOAD_PROGRESS",
+      "severity": "medium",
+      "cves": ["CVE-2026-109619"],
+      "rationale": "Nom par défaut de session.upload_progress.name ; visible dans les logs WAF ou de corps de requête.",
+      "false_positives": "Applications utilisant réellement la progression d'upload."
+    },
+    {
+      "id": "DR-010",
+      "title": "Diagnostic INI émis avant initialisation",
+      "applies_to": ["error", "fpm"],
+      "pattern": "PHP (Warning|Deprecated|Notice):.* in Unknown on line 0",
+      "severity": "low",
+      "cves": ["CVE-2026-109619"],
+      "rationale": "Les diagnostics INI pré-initialisation sont un consommateur d'état périmé selon l'avis PHP.",
+      "false_positives": "Directives obsolètes sans lien avec une attaque : à corriger quand même."
+    },
+    {
+      "id": "DR-011",
+      "title": "Requête vers un .php dans un répertoire d'upload",
+      "applies_to": ["access"],
+      "pattern": "\"(GET|POST) [^\"]*/(uploads?|tmp|cache|files)/[^\" ?]*\\.ph(p[0-9]?|tml|ar)[^\"]*\" 200 ",
+      "severity": "high",
+      "cves": [],
+      "rationale": "Indicateur post-exploitation générique (web shell).",
+      "false_positives": "Applications exécutant volontairement du PHP dans ces chemins."
+    },
+    {
+      "id": "DR-012",
+      "title": "Accès FastCGI direct ou pearcmd",
+      "applies_to": ["access"],
+      "pattern": "pearcmd(\\.php)?|/usr/(local/)?lib/php",
+      "severity": "high",
+      "cves": [],
+      "rationale": "Étapes de chaînage citées par certains PoC publics (LFI vers pearcmd).",
+      "false_positives": "Rares."
+    }
+  ]
+}

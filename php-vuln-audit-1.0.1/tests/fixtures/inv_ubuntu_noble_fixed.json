@@ -1,0 +1,130 @@
+{
+ "schema_version": 1,
+ "collected_at": "2026-10-22T08:00:00+00:00",
+ "hostname": "web-noble-fixed",
+ "euid": 0,
+ "os": {
+  "id": "ubuntu",
+  "version_id": "24.04",
+  "codename": "noble",
+  "pretty": "Ubuntu 24.04.5 LTS"
+ },
+ "packages": [
+  {
+   "name": "php8.3-cli",
+   "version": "8.3.6-0ubuntu0.24.04.13",
+   "source": "php8.3",
+   "source_version": "8.3.6-0ubuntu0.24.04.13"
+  },
+  {
+   "name": "php8.3-fpm",
+   "version": "8.3.6-0ubuntu0.24.04.13",
+   "source": "php8.3",
+   "source_version": "8.3.6-0ubuntu0.24.04.13"
+  },
+  {
+   "name": "php8.3-common",
+   "version": "8.3.6-0ubuntu0.24.04.13",
+   "source": "php8.3",
+   "source_version": "8.3.6-0ubuntu0.24.04.13"
+  },
+  {
+   "name": "php-common",
+   "version": "2:93ubuntu2",
+   "source": "php-defaults",
+   "source_version": "2:93ubuntu2"
+  }
+ ],
+ "changelog_cves": {
+  "php8.3": [
+   "CVE-2026-109618",
+   "CVE-2026-109619"
+  ]
+ },
+ "binaries": [
+  {
+   "path": "/usr/bin/php8.3",
+   "realpath": "/usr/bin/php8.3",
+   "version": "8.3.6",
+   "sapi": "cli",
+   "owner_package": "php8.3-cli"
+  },
+  {
+   "path": "/usr/sbin/php-fpm8.3",
+   "realpath": "/usr/sbin/php-fpm8.3",
+   "version": "8.3.6",
+   "sapi": "fpm-fcgi",
+   "owner_package": "php8.3-fpm"
+  }
+ ],
+ "ini": {
+  "8.3": {
+   "cli": {
+    "values": {},
+    "files": []
+   },
+   "fpm": {
+    "values": {
+     "memory_limit": "128M",
+     "post_max_size": "64M"
+    },
+    "files": [
+     "/etc/php/8.3/fpm/php.ini"
+    ]
+   }
+  }
+ },
+ "fpm_pools": {
+  "8.3": [
+   {
+    "file": "/etc/php/8.3/fpm/pool.d/www.conf",
+    "pool": "www",
+    "admin": {
+     "session.upload_progress.enabled": "0"
+    },
+    "user": {
+     "memory_limit": "-1"
+    },
+    "settings": {
+     "user": "www-data",
+     "listen": "/run/php/php8.3-fpm.sock",
+     "pm.max_requests": "500"
+    }
+   }
+  ]
+ },
+ "apache": {
+  "present": false,
+  "php_modules_enabled": [],
+  "mpm": null,
+  "conf_php_overrides": 0,
+  "htaccess_php_overrides": 0,
+  "htaccess_scanned": 0,
+  "htaccess_truncated": false
+ },
+ "services": [
+  {
+   "unit": "php8.3-fpm.service",
+   "load": "loaded",
+   "active": "active",
+   "sub": "running"
+  },
+  {
+   "unit": "nginx.service",
+   "load": "loaded",
+   "active": "active",
+   "sub": "running"
+  }
+ ],
+ "stale_processes": {
+  "scanned": 120,
+  "unreadable": 0,
+  "matches": []
+ },
+ "containers": {
+  "enabled": false,
+  "items": []
+ },
+ "http_probes": [],
+ "errors": []
+}
